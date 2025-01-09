@@ -2,11 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "utils.h"
 #include "config-utils.h"
 #include "server-utils.h"
 
 
-/* Retourne la clé du fichier de configuration associée à Config_Type */
+/* Retourne la clé du fichier de configuration associée à config_type */
 char *get_config_type_key(enum Config_Type config_type) {
     switch (config_type) {
         case CFG_SERVER_NAME:
@@ -27,7 +28,7 @@ int get_value_from_config_file(char *config, enum Config_Type config_type) {
     char buffer[50];
     char *config_tmp;
 
-    if ((config_file = fopen("config/ghsu.conf", "r")) == NULL)
+    if ((config_file = open_file_read(CONFIG_FILE_NAME, CONFIG)) == NULL)
         return -1;
 
     char *config_key = get_config_type_key(config_type);
@@ -36,12 +37,9 @@ int get_value_from_config_file(char *config, enum Config_Type config_type) {
     while (fgets(buffer, sizeof(buffer), config_file) != NULL
                 && (config_tmp = strstr(buffer, config_key)) == NULL);
 
-    // Si la clé n'existe pas, set_config s'en chargera.
+    // Si la clé n'existe pas, retourne -1 (set_config s'en chargera)
     if (config_tmp == NULL) {
-        if (fclose(config_file) != 0) {
-            perror("Erreur : load_config -> fclose()\n");
-            exit(1);
-        }
+        close_file(config_file, 1);
         return -1;
     }
 
@@ -49,10 +47,7 @@ int get_value_from_config_file(char *config, enum Config_Type config_type) {
     config_tmp[strcspn(config_tmp, "\r\n")] = '\0';
     strcpy(config, config_tmp);
 
-    if (fclose(config_file) != 0) {
-        perror("Erreur : load_config -> fclose()\n");
-        exit(2);
-    }
+    close_file(config_file, 2);
 
     return 0;
 }

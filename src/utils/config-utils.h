@@ -1,7 +1,8 @@
 #ifndef CONFIG_UTILS_H
 #define CONFIG_UTILS_H
 
-#define NB_CONFIG 3
+#define CONFIG_FILE_NAME "ghsu.conf"
+#define NB_CONFIGS 3
 #define MAX_CONFIG_LENGTH 50
 #define MAC_LENGTH 18
 #define IP_LENGTH 14
@@ -10,7 +11,7 @@ enum Config_Type {
    CFG_SERVER_NAME,
    CFG_SERVER_MAC,
    CFG_SERVER_IP,
-   CFG_NB_CONFIG = NB_CONFIG
+   CFG_NB_CONFIGS = NB_CONFIGS
 };
 
 struct structConfig {
