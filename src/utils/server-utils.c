@@ -4,6 +4,10 @@
 
 #include "server-utils.h"
 
+#define COLOR_GREEN "\033[32m"
+#define COLOR_RED "\033[31m"
+#define COLOR_RESET "\033[0m"
+
 
 int ping_server(char *server_ip) {
     char ping_command[46];
@@ -19,6 +23,15 @@ int ping_server(char *server_ip) {
     #endif
 
     return (system(ping_command) == 0);
+}
+
+void print_server_status(char *server_ip) {
+    printf("Statut du serveur : ");
+
+    if (ping_server(server_ip))
+        printf("%s.\n", COLOR_GREEN "allumé" COLOR_RESET);
+    else
+        printf("%s.\n", COLOR_RED "éteint" COLOR_RESET);
 }
 
 void start_server(char *server_mac, char* server_ip) {
